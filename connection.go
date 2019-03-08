@@ -123,11 +123,16 @@ func (c *Connection) Close(ctx context.Context) error {
 	return nil
 }
 
-func (c *Connection) Query(ctx context.Context, query string) (RowSet, error) {
+func (c *Connection) Query(ctx context.Context, query string, options []string) (RowSet, error) {
 	bquery := beeswax.Query{}
 
 	bquery.Query = query
 	bquery.Configuration = []string{}
+	if len(options) > 0 {
+		for _, opt := range options {
+			bquery.Configuration = append(bquery.Configuration, opt)
+		}
+	}
 
 	handle, err := c.client.Query(ctx, &bquery)
 
